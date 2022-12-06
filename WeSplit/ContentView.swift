@@ -26,11 +26,24 @@ struct ContentView: View {
         return amountPerPerson
     }
     
+    var totalAmount: Double {
+        let tipSelection = Double(tipPercentage)
+        let tipValue = checkAmount / 100 * tipSelection
+    
+        let grandTotal = checkAmount + tipValue
+        
+        return grandTotal
+    }
+    
+    var currencyIdentifier: FloatingPointFormatStyle<Double>.Currency {
+        FloatingPointFormatStyle<Double>.Currency(code: Locale.current.currency?.identifier ?? "USD")
+    }
+    
     var body: some View {
         NavigationView {
             Form {
                 Section {
-                    TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                    TextField("Amount", value: $checkAmount, format: currencyIdentifier)
                         .keyboardType(.decimalPad)
                         .focused($amountIsFocused)
                     Picker("Number of people: ", selection: $numberOfPeople) {
@@ -43,17 +56,23 @@ struct ContentView: View {
                 
                 Section {
                     Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(tipPercentages, id: \.self) {
+                        ForEach(0..<101, id: \.self) {
                             Text($0, format: .percent)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.navigationLink)
                 } header: {
                     Text("How much tip do you want to leave?")
                 }
                 
                 Section {
-                    Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                    Text(totalPerPerson, format: currencyIdentifier)
+                } header: {
+                    Text("Amount per person")
+                }
+                
+                Section {
+                    Text(totalAmount, format: currencyIdentifier)
                 }
             }
             .navigationTitle("WeSplit")
