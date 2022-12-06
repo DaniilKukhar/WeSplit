@@ -35,7 +35,7 @@ struct ContentView: View {
         return grandTotal
     }
     
-    var currencyIdentifier: FloatingPointFormatStyle<Double>.Currency {
+    var currencyFormatter: FloatingPointFormatStyle<Double>.Currency {
         FloatingPointFormatStyle<Double>.Currency(code: Locale.current.currency?.identifier ?? "USD")
     }
     
@@ -43,7 +43,7 @@ struct ContentView: View {
         NavigationView {
             Form {
                 Section {
-                    TextField("Amount", value: $checkAmount, format: currencyIdentifier)
+                    TextField("Amount", value: $checkAmount, format: currencyFormatter)
                         .keyboardType(.decimalPad)
                         .focused($amountIsFocused)
                     Picker("Number of people: ", selection: $numberOfPeople) {
@@ -66,13 +66,13 @@ struct ContentView: View {
                 }
                 
                 Section {
-                    Text(totalPerPerson, format: currencyIdentifier)
+                    Text(totalPerPerson, format: currencyFormatter)
                 } header: {
                     Text("Amount per person")
                 }
                 
                 Section {
-                    Text(totalAmount, format: currencyIdentifier)
+                    Text(totalAmount, format: currencyFormatter)
                 }
             }
             .navigationTitle("WeSplit")
